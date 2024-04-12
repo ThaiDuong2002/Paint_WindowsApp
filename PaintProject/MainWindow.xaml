@@ -1,4 +1,4 @@
-﻿<Window
+﻿<Fluent:RibbonWindow
     x:Class="PaintProject.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,6 +9,14 @@
     Title="MainWindow"
     Width="800"
     Height="450"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <Grid />
-</Window>
+    <Fluent:RibbonWindow.Resources>
+        <Style TargetType="Image">
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+        </Style>
+    </Fluent:RibbonWindow.Resources>
+    <DockPanel LastChildFill="True">
+        
+    </DockPanel>
+</Fluent:RibbonWindow>

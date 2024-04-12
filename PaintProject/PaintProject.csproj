@@ -9,9 +9,45 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Icons\add.png" />
+    <None Remove="Images\Icons\colour.png" />
+    <None Remove="Images\Icons\copy.png" />
+    <None Remove="Images\Icons\draw.png" />
+    <None Remove="Images\Icons\duplicate.png" />
+    <None Remove="Images\Icons\edit.png" />
+    <None Remove="Images\Icons\export.png" />
+    <None Remove="Images\Icons\open.png" />
+    <None Remove="Images\Icons\paste.png" />
+    <None Remove="Images\Icons\photo.png" />
+    <None Remove="Images\Icons\redo.png" />
+    <None Remove="Images\Icons\save.png" />
+    <None Remove="Images\Icons\scissors.png" />
+    <None Remove="Images\Icons\trash.png" />
+    <None Remove="Images\Icons\undo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.0" />
     <PackageReference Include="Fluent.Ribbon" Version="10.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Icons\add.png" />
+    <Resource Include="Images\Icons\colour.png" />
+    <Resource Include="Images\Icons\copy.png" />
+    <Resource Include="Images\Icons\draw.png" />
+    <Resource Include="Images\Icons\duplicate.png" />
+    <Resource Include="Images\Icons\edit.png" />
+    <Resource Include="Images\Icons\export.png" />
+    <Resource Include="Images\Icons\open.png" />
+    <Resource Include="Images\Icons\paste.png" />
+    <Resource Include="Images\Icons\photo.png" />
+    <Resource Include="Images\Icons\redo.png" />
+    <Resource Include="Images\Icons\save.png" />
+    <Resource Include="Images\Icons\scissors.png" />
+    <Resource Include="Images\Icons\trash.png" />
+    <Resource Include="Images\Icons\undo.png" />
   </ItemGroup>
 
 </Project>
