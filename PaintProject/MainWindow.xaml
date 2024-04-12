@@ -62,7 +62,7 @@
                     <Fluent:Button
                         Name="addnewButton"
                         Header="New"
-                        ToolTip="Ctrl N">
+                        ToolTip="Ctrl + N">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/add.png" />
                         </Fluent:Button.LargeIcon>
@@ -72,7 +72,7 @@
                     <Fluent:Button
                         Name="openFileButton"
                         Header="Open"
-                        ToolTip="Ctrl O">
+                        ToolTip="Ctrl + O">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/open.png" />
                         </Fluent:Button.LargeIcon>
@@ -80,7 +80,7 @@
                     <Fluent:Button
                         Name="saveFileButton"
                         Header="Save"
-                        ToolTip="Ctrl S">
+                        ToolTip="Ctrl + S">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/save.png" />
                         </Fluent:Button.LargeIcon>
@@ -90,7 +90,7 @@
                     <Fluent:Button
                         Name="exportButton"
                         Header="Export"
-                        ToolTip="Ctrl E">
+                        ToolTip="Ctrl + E">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/export.png" />
                         </Fluent:Button.LargeIcon>
@@ -98,7 +98,7 @@
                     <Fluent:Button
                         Name="importImageButton"
                         Header="Photo"
-                        ToolTip="Ctrl P">
+                        ToolTip="Ctrl + P">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/photo.png" />
                         </Fluent:Button.LargeIcon>
@@ -127,7 +127,7 @@
                     <Fluent:Button
                         Name="undoButton"
                         Header="Undo"
-                        ToolTip="Ctrl Z">
+                        ToolTip="Ctrl + Z">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/undo.png" />
                         </Fluent:Button.LargeIcon>
@@ -135,7 +135,7 @@
                     <Fluent:Button
                         Name="redoButton"
                         Header="Redo"
-                        ToolTip="Ctrl Y">
+                        ToolTip="Ctrl + Y">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/redo.png" />
                         </Fluent:Button.LargeIcon>
@@ -153,7 +153,7 @@
                     <Fluent:Button
                         x:Name="copyButton"
                         Header="Copy"
-                        ToolTip="Ctrl C">
+                        ToolTip="Ctrl + C">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/copy.png" />
                         </Fluent:Button.LargeIcon>
@@ -161,7 +161,7 @@
                     <Fluent:Button
                         x:Name="cutButton"
                         Header="Cut"
-                        ToolTip="Ctrl X">
+                        ToolTip="Ctrl + X">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/scissors.png" />
                         </Fluent:Button.LargeIcon>
@@ -169,7 +169,7 @@
                     <Fluent:Button
                         x:Name="pasteButton"
                         Header="Paste"
-                        ToolTip="Ctrl V">
+                        ToolTip="Ctrl + V">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/paste.png" />
                         </Fluent:Button.LargeIcon>
@@ -177,7 +177,7 @@
                     <Fluent:Button
                         x:Name="DuplicateButton"
                         Header="Duplicate"
-                        ToolTip="Ctrl D">
+                        ToolTip="Ctrl + D">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/duplicate.png" />
                         </Fluent:Button.LargeIcon>
