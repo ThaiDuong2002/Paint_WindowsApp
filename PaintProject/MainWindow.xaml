@@ -118,10 +118,10 @@
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
                     <Fluent:Button
-                        x:Name="editButton"
-                        Header="Edit">
+                        x:Name="selectButton"
+                        Header="Select">
                         <Fluent:Button.LargeIcon>
-                            <Image Source="Images/Icons/edit.png" />
+                            <Image Source="Images/Icons/select.png" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
                     <Fluent:Button

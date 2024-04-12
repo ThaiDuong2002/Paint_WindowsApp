@@ -24,6 +24,7 @@
     <None Remove="Images\Icons\redo.png" />
     <None Remove="Images\Icons\save.png" />
     <None Remove="Images\Icons\scissors.png" />
+    <None Remove="Images\Icons\select.png" />
     <None Remove="Images\Icons\trash.png" />
     <None Remove="Images\Icons\undo.png" />
   </ItemGroup>
@@ -50,6 +51,7 @@
     <Resource Include="Images\Icons\redo.png" />
     <Resource Include="Images\Icons\save.png" />
     <Resource Include="Images\Icons\scissors.png" />
+    <Resource Include="Images\Icons\select.png" />
     <Resource Include="Images\Icons\trash.png" />
     <Resource Include="Images\Icons\undo.png" />
   </ItemGroup>
