@@ -6,17 +6,369 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:PaintProject"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="MainWindow"
-    Width="800"
-    Height="450"
+    Title="Paint"
+    Width="1200"
+    Height="750"
+    Loaded="RibbonWindow_Loaded"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Fluent:RibbonWindow.Resources>
+        <Style TargetType="Fluent:RibbonTabItem">
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image
+                                Width="16"
+                                Height="16"
+                                Source="{Binding Tag, RelativeSource={RelativeSource AncestorType=Fluent:RibbonTabItem}}" />
+                            <TextBlock
+                                Margin="4,0,0,0"
+                                Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style TargetType="Image">
             <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
         </Style>
+        <Style
+            x:Key="DisableMouseOver"
+            TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Fluent:RibbonWindow.Resources>
     <DockPanel LastChildFill="True">
-        
+        <Fluent:Ribbon DockPanel.Dock="Top">
+            <Fluent:Ribbon.Resources>
+                <Style TargetType="Fluent:Button">
+                    <Setter Property="Padding" Value="4,4,4,0" />
+                </Style>
+            </Fluent:Ribbon.Resources>
+            <Fluent:RibbonTabItem
+                Header="Files"
+                Tag="/Images/Icons/folder.png">
+                <Fluent:RibbonGroupBox Header="New">
+                    <Fluent:Button
+                        Name="addnewButton"
+                        Header="New"
+                        ToolTip="Ctrl N">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/add.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Files">
+                    <Fluent:Button
+                        Name="openFileButton"
+                        Header="Open"
+                        ToolTip="Ctrl O">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/open.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button
+                        Name="saveFileButton"
+                        Header="Save"
+                        ToolTip="Ctrl S">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/save.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Images">
+                    <Fluent:Button
+                        Name="exportButton"
+                        Header="Export"
+                        ToolTip="Ctrl E">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/export.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button
+                        Name="importImageButton"
+                        Header="Photo"
+                        ToolTip="Ctrl P">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/photo.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem
+                Header="Painting"
+                Tag="/Images/Icons/painting.png">
+                <Fluent:RibbonGroupBox Header="Tools">
+                    <Fluent:Button
+                        x:Name="drawButton"
+                        Header="Draw"
+                        Visibility="Collapsed">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/draw.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button
+                        x:Name="editButton"
+                        Header="Edit">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/edit.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button
+                        Name="undoButton"
+                        Header="Undo"
+                        ToolTip="Ctrl Z">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/undo.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button
+                        Name="redoButton"
+                        Header="Redo"
+                        ToolTip="Ctrl Y">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/redo.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button
+                        Name="Delete"
+                        Header="Delete"
+                        ToolTip="Del">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/trash.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Clipboard">
+                    <Fluent:Button
+                        x:Name="copyButton"
+                        Header="Copy"
+                        ToolTip="Ctrl C">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/copy.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button
+                        x:Name="cutButton"
+                        Header="Cut"
+                        ToolTip="Ctrl X">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/scissors.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button
+                        x:Name="pasteButton"
+                        Header="Paste"
+                        ToolTip="Ctrl V">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/paste.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button
+                        x:Name="DuplicateButton"
+                        Header="Duplicate"
+                        ToolTip="Ctrl D">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="Images/Icons/duplicate.png" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Shapes">
+                    <ListView
+                        x:Name="shapeListView"
+                        Width="160"
+                        BorderThickness="0"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border
+                                    Padding="5"
+                                    BorderThickness="1"
+                                    CornerRadius="4">
+                                    <Image
+                                        Width="22"
+                                        Height="22"
+                                        RenderOptions.BitmapScalingMode="Fant"
+                                        Source="{Binding Icon}" />
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="ToolTip" Value="{Binding Name}" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox
+                    VerticalAlignment="Center"
+                    Header="Style">
+                    <StackPanel
+                        Margin="4,4,4,0"
+                        HorizontalAlignment="Center">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            Text="Size" />
+                        <Fluent:ComboBox
+                            x:Name="sizeComboBox"
+                            Height="20"
+                            Margin="0,8,0,8"
+                            HorizontalAlignment="Center"
+                            IsEditable="False"
+                            SelectedIndex="0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type local:SizeOption}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Label}" />
+                                        <TextBlock
+                                            FontWeight="{Binding FontWeight}"
+                                            Text=" -------" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </Fluent:ComboBox>
+                    </StackPanel>
+                    <StackPanel
+                        Margin="4,4,4,0"
+                        HorizontalAlignment="Center"
+                        Orientation="Vertical">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            Text="Outline" />
+                        <Fluent:ComboBox
+                            x:Name="outlineComboBox"
+                            Width="130"
+                            Height="20"
+                            Margin="0,8,0,8"
+                            HorizontalAlignment="Center"
+                            IsEditable="False"
+                            SelectedIndex="0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type local:OutlineOption}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel.Resources>
+                                            <Style TargetType="Line">
+                                                <Setter Property="X1" Value="0" />
+                                                <Setter Property="X2" Value="100" />
+                                                <Setter Property="Stroke" Value="Black" />
+                                                <Setter Property="StrokeThickness" Value="2" />
+                                                <Setter Property="Margin" Value="5" />
+                                            </Style>
+                                        </StackPanel.Resources>
+                                        <Line StrokeDashArray="{Binding Value}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </Fluent:ComboBox>
+                    </StackPanel>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Colors">
+                    <StackPanel Orientation="Horizontal">
+                        <ListView
+                            x:Name="solidColorsListView"
+                            Width="200"
+                            Margin="0,4,0,0"
+                            BorderThickness="0"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            SelectedIndex="0">
+                            <ListView.Resources>
+                                <DataTemplate DataType="{x:Type SolidColorBrush}">
+                                    <Border
+                                        Width="25"
+                                        Height="25"
+                                        Background="{Binding}"
+                                        BorderBrush="Black"
+                                        BorderThickness="1"
+                                        CornerRadius="1000" />
+                                </DataTemplate>
+                            </ListView.Resources>
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel
+                                        IsItemsHost="True"
+                                        Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                        </ListView>
+                        <Fluent:Button
+                            Name="editColorButton"
+                            Margin="0,6,0,0"
+                            Padding="4,4,4,0"
+                            Header="Custom">
+                            <Fluent:Button.LargeIcon>
+                                <Image Source="Images/Icons/colour.png" />
+                            </Fluent:Button.LargeIcon>
+                        </Fluent:Button>
+                    </StackPanel>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+        </Fluent:Ribbon>
+        <Fluent:StatusBar
+            Background="White"
+            DockPanel.Dock="Bottom">
+            <Fluent:StatusBarItem
+                Title="Tool"
+                Margin="20,0,0,0"
+                HorizontalAlignment="Left">
+                <TextBlock Foreground="Black">
+                    <Run Text="Tool: " />
+                    <Run
+                        x:Name="toolText"
+                        Text="Drawing" />
+                </TextBlock>
+            </Fluent:StatusBarItem>
+            <Separator HorizontalAlignment="Left" />
+            <Fluent:StatusBarItem
+                Title="Shape"
+                HorizontalAlignment="Left">
+                <TextBlock Foreground="Black">
+                    <Run Text="Shape: " />
+                    <Run
+                        x:Name="shapeText"
+                        Text="Circle" />
+                </TextBlock>
+            </Fluent:StatusBarItem>
+            <Fluent:StatusBarItem
+                Title="App"
+                Margin="0,0,20,0"
+                Foreground="Black"
+                HorizontalAlignment="Right"
+                Content="Paint"
+                Value="Paint" />
+        </Fluent:StatusBar>
+        <Grid
+            Margin="4"
+            d:Height="540"
+            d:Width="960">
+            <Border
+                x:Name="drawingHandlerArea"
+                Background="Transparent"
+                IsHitTestVisible="True" />
+            <Canvas
+                x:Name="drawingArea"
+                Background="White"
+                ClipToBounds="True"
+                IsHitTestVisible="False" />
+            <Canvas
+                x:Name="previewDrawingArea"
+                Background="Transparent"
+                ClipToBounds="True"
+                IsHitTestVisible="False" />
+        </Grid>
     </DockPanel>
 </Fluent:RibbonWindow>

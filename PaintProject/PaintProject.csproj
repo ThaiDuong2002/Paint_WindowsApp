@@ -16,7 +16,9 @@
     <None Remove="Images\Icons\duplicate.png" />
     <None Remove="Images\Icons\edit.png" />
     <None Remove="Images\Icons\export.png" />
+    <None Remove="Images\Icons\folder.png" />
     <None Remove="Images\Icons\open.png" />
+    <None Remove="Images\Icons\painting.png" />
     <None Remove="Images\Icons\paste.png" />
     <None Remove="Images\Icons\photo.png" />
     <None Remove="Images\Icons\redo.png" />
@@ -40,7 +42,9 @@
     <Resource Include="Images\Icons\duplicate.png" />
     <Resource Include="Images\Icons\edit.png" />
     <Resource Include="Images\Icons\export.png" />
+    <Resource Include="Images\Icons\folder.png" />
     <Resource Include="Images\Icons\open.png" />
+    <Resource Include="Images\Icons\painting.png" />
     <Resource Include="Images\Icons\paste.png" />
     <Resource Include="Images\Icons\photo.png" />
     <Resource Include="Images\Icons\redo.png" />
