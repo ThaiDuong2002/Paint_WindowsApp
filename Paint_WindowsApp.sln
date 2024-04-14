@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaintProject", "PaintProjec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contact", "Contact\Contact.csproj", "{71BABE5D-EEC8-42C0-A1C4-5692E03E23F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLine", "MyLine\MyLine.csproj", "{F4818D78-B7C4-4379-9E29-4386DA7FFA07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLine", "MyLine\MyLine.csproj", "{F4818D78-B7C4-4379-9E29-4386DA7FFA07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

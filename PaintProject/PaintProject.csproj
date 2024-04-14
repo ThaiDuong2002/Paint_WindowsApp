@@ -37,6 +37,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Contact\Contact.csproj" />
+    <ProjectReference Include="..\MyLine\MyLine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\Icons\add.png" />
     <Resource Include="Images\Icons\colour.png" />
     <Resource Include="Images\Icons\copy.png" />

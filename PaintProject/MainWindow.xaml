@@ -346,9 +346,9 @@
             <Fluent:StatusBarItem
                 Title="App"
                 Margin="0,0,20,0"
-                Foreground="Black"
                 HorizontalAlignment="Right"
                 Content="Paint"
+                Foreground="Black"
                 Value="Paint" />
         </Fluent:StatusBar>
         <Grid
@@ -358,7 +358,11 @@
             <Border
                 x:Name="drawingHandlerArea"
                 Background="Transparent"
-                IsHitTestVisible="True" />
+                IsHitTestVisible="True"
+                MouseDown="drawingHandlerArea_MouseDown"
+                MouseLeave="drawingHandlerArea_MouseLeave"
+                MouseMove="drawingHandlerArea_MouseMove"
+                MouseUp="drawingHandlerArea_MouseUp" />
             <Canvas
                 x:Name="drawingArea"
                 Background="White"
