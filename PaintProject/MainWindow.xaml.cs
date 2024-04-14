@@ -14,7 +14,7 @@
         private void RibbonWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             sizeComboBox.ItemsSource = options.Sizes;
-            sizeComboBox.SelectedIndex = 1;
+            sizeComboBox.SelectedIndex = 0;
             outlineComboBox.ItemsSource = options.Outlines;
             outlineComboBox.SelectedIndex = 0;
             solidColorsListView.ItemsSource = options.Colors;

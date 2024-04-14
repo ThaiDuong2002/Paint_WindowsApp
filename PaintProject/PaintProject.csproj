@@ -56,4 +56,8 @@
     <Resource Include="Images\Icons\undo.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\Shapes\" />
+  </ItemGroup>
+
 </Project>
