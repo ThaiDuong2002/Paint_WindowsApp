@@ -27,6 +27,7 @@
     <None Remove="Images\Icons\select.png" />
     <None Remove="Images\Icons\trash.png" />
     <None Remove="Images\Icons\undo.png" />
+    <None Remove="Images\Shapes\line.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,10 +55,7 @@
     <Resource Include="Images\Icons\select.png" />
     <Resource Include="Images\Icons\trash.png" />
     <Resource Include="Images\Icons\undo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Images\Shapes\" />
+    <Resource Include="Images\Shapes\line.png" />
   </ItemGroup>
 
 </Project>
