@@ -17,21 +17,20 @@ namespace PaintProject
                 return;
             }
 
-            FileInfo[] files = new DirectoryInfo(folder).GetFiles("My*.dll");
+            FileInfo[] files = new DirectoryInfo(folder).GetFiles("*.dll");
             foreach (FileInfo file in files)
             {
                 Assembly assembly = Assembly.LoadFrom(file.FullName);
                 Type[] types = assembly.GetTypes();
                 foreach (Type type in types)
                 {
-                    if (type.IsClass && typeof(IShape).IsAssignableFrom(type))
+                    if (type.IsClass && typeof(IShape).IsAssignableFrom(type) && type != typeof(CustomPoint))
                     {
-                        if (Activator.CreateInstance(type) is not IShape shape)
+                        IShape shape = (IShape)Activator.CreateInstance(type);
+                        if (shape != null)
                         {
-                            continue;
+                            _shapes.Add(shape.Name, shape);
                         }
-
-                        _shapes.Add(shape.Name, shape);
                     }
                 }
             }

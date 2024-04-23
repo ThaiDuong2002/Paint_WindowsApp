@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace MyLine
+namespace LineShape
 {
     public class MyLine : ShapePoint, IShape
     {

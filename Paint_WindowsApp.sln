@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contact", "Contact\Contact.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLine", "MyLine\MyLine.csproj", "{F4818D78-B7C4-4379-9E29-4386DA7FFA07}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyRectangle", "MyRectangle\MyRectangle.csproj", "{CADB433E-FD3E-4E9C-BBCB-5A23AE5F6357}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyEllipse", "MyEllipse\MyEllipse.csproj", "{9D07B730-339E-4C8B-8016-5C8F98185C10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{F4818D78-B7C4-4379-9E29-4386DA7FFA07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4818D78-B7C4-4379-9E29-4386DA7FFA07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4818D78-B7C4-4379-9E29-4386DA7FFA07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CADB433E-FD3E-4E9C-BBCB-5A23AE5F6357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CADB433E-FD3E-4E9C-BBCB-5A23AE5F6357}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CADB433E-FD3E-4E9C-BBCB-5A23AE5F6357}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CADB433E-FD3E-4E9C-BBCB-5A23AE5F6357}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D07B730-339E-4C8B-8016-5C8F98185C10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D07B730-339E-4C8B-8016-5C8F98185C10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D07B730-339E-4C8B-8016-5C8F98185C10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D07B730-339E-4C8B-8016-5C8F98185C10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -188,6 +188,7 @@
                         x:Name="shapeListView"
                         Width="160"
                         BorderThickness="0"
+                        SelectionChanged="ShapeListView_SelectionChanged"
                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -226,6 +227,7 @@
                             Text="Size" />
                         <Fluent:ComboBox
                             x:Name="sizeComboBox"
+                            SelectionChanged="sizeComboBox_SelectionChanged"
                             Height="20"
                             Margin="0,8,0,8"
                             HorizontalAlignment="Center"
@@ -252,6 +254,7 @@
                             Text="Outline" />
                         <Fluent:ComboBox
                             x:Name="outlineComboBox"
+                            SelectionChanged="outlineComboBox_SelectionChanged"
                             Width="130"
                             Height="20"
                             Margin="0,8,0,8"
@@ -281,6 +284,7 @@
                     <StackPanel Orientation="Horizontal">
                         <ListView
                             x:Name="solidColorsListView"
+                            SelectionChanged="solidColorsListView_SelectionChanged"
                             Width="200"
                             Margin="0,4,0,0"
                             BorderThickness="0"
@@ -360,7 +364,6 @@
                 Background="Transparent"
                 IsHitTestVisible="True"
                 MouseDown="drawingHandlerArea_MouseDown"
-                MouseLeave="drawingHandlerArea_MouseLeave"
                 MouseMove="drawingHandlerArea_MouseMove"
                 MouseUp="drawingHandlerArea_MouseUp" />
             <Canvas

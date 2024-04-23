@@ -27,7 +27,9 @@
     <None Remove="Images\Icons\select.png" />
     <None Remove="Images\Icons\trash.png" />
     <None Remove="Images\Icons\undo.png" />
+    <None Remove="Images\Shapes\ellipse.png" />
     <None Remove="Images\Shapes\line.png" />
+    <None Remove="Images\Shapes\rectangle.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +40,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Contact\Contact.csproj" />
+    <ProjectReference Include="..\MyEllipse\MyEllipse.csproj" />
+    <ProjectReference Include="..\MyLine\MyLine.csproj" />
+    <ProjectReference Include="..\MyRectangle\MyRectangle.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,7 +64,9 @@
     <Resource Include="Images\Icons\select.png" />
     <Resource Include="Images\Icons\trash.png" />
     <Resource Include="Images\Icons\undo.png" />
+    <Resource Include="Images\Shapes\ellipse.png" />
     <Resource Include="Images\Shapes\line.png" />
+    <Resource Include="Images\Shapes\rectangle.png" />
   </ItemGroup>
 
 </Project>
