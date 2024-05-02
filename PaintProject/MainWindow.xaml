@@ -152,6 +152,7 @@
                 <Fluent:RibbonGroupBox Header="Clipboard">
                     <Fluent:Button
                         x:Name="copyButton"
+                        Click="copyButton_Click"
                         Header="Copy"
                         ToolTip="Ctrl + C">
                         <Fluent:Button.LargeIcon>
@@ -169,6 +170,7 @@
                     <Fluent:Button
                         x:Name="pasteButton"
                         Header="Paste"
+                        Click="pasteButton_Click"
                         ToolTip="Ctrl + V">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/paste.png" />
@@ -235,11 +237,16 @@
                             SelectedIndex="0">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate DataType="{x:Type local:SizeOption}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Label}" />
-                                        <TextBlock
-                                            FontWeight="{Binding FontWeight}"
-                                            Text=" -------" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Label}" />
+                                        <Line
+                                            Margin="5 5 0 0"
+                                            X1="0"
+                                            X2="100"
+                                            Stroke="Black"
+                                            VerticalAlignment="Center"
+                                            StrokeThickness="{Binding Value}"
+                                             />
                                     </StackPanel>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
@@ -359,23 +366,15 @@
             Margin="4"
             d:Height="540"
             d:Width="960">
-            <Border
-                x:Name="drawingHandlerArea"
-                Background="Transparent"
-                IsHitTestVisible="True"
-                MouseDown="drawingHandlerArea_MouseDown"
-                MouseMove="drawingHandlerArea_MouseMove"
-                MouseUp="drawingHandlerArea_MouseUp" />
             <Canvas
                 x:Name="drawingArea"
-                Background="White"
-                ClipToBounds="True"
-                IsHitTestVisible="False" />
+              />
             <Canvas
-                x:Name="previewDrawingArea"
                 Background="Transparent"
-                ClipToBounds="True"
-                IsHitTestVisible="False" />
+                MouseDown="drawingHandlerArea_MouseDown"
+                MouseMove="drawingHandlerArea_MouseMove"
+                MouseUp="drawingHandlerArea_MouseUp" 
+                />
         </Grid>
     </DockPanel>
 </Fluent:RibbonWindow>

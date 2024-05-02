@@ -11,13 +11,14 @@ namespace EllipseShape
     {
         public string Name => "Ellipse";
         public string Icon => "Images/Shapes/ellipse.png";
+        public double RotateAngleS { get; set; } = 0;
 
-        public IShape Clone()
+        public object Clone()
         {
-            return new MyEllipse();
+            return this.MemberwiseClone();
         }
 
-        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size)
+        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size, double RotateAngle)
         {
             var left = Math.Min(BottomRight.X, TopLeft.X);
             var top = Math.Min(BottomRight.Y, TopLeft.Y);
@@ -25,6 +26,10 @@ namespace EllipseShape
             var bottom = Math.Max(BottomRight.Y, TopLeft.Y);
             var width = right - left;
             var height = bottom - top;
+
+            this.Outline = outline;
+            this.Color = color;
+            this.Size = size;
 
             var ellipse = new Ellipse()
             {
@@ -37,6 +42,16 @@ namespace EllipseShape
 
             Canvas.SetLeft(ellipse, left);
             Canvas.SetTop(ellipse, top);
+            this.RotateAngleS = RotateAngle;
+
+
+            RotateTransform transform = new(this.RotateAngleS)
+            {
+                CenterX = width * 1.0 / 2,
+                CenterY = height * 1.0 / 2
+            };
+
+            ellipse.RenderTransform = transform;
 
             return ellipse;
         }
@@ -57,6 +72,16 @@ namespace EllipseShape
                 X = point.X,
                 Y = point.Y
             };
+        }
+
+        public CustomPoint GetStart()
+        {
+            return BottomRight;
+        }
+
+        public CustomPoint GetEnd()
+        {
+            return TopLeft;
         }
     }
 }

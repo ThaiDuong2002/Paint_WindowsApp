@@ -5,6 +5,10 @@ using System.Windows.Media;
 using LineShape;
 using RectangleShape;
 using EllipseShape;
+using System.Diagnostics;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
+using System.Numerics;
+using System.Windows.Shapes;
 
 namespace PaintProject
 {
@@ -17,14 +21,18 @@ namespace PaintProject
         private Point startPoint;
         private Point endPoint;
 
-        private SolidColorBrush colorSelected= Brushes.Black;
+        private SolidColorBrush colorSelected = Brushes.Black;
         private int sizeSelected = 1;
         private DoubleCollection outlineSelected = new DoubleCollection();
 
         private Options options = new Options();
         private readonly ShapeSingleton _shapeSingleton = ShapeSingleton.Instance;
-        public List<IShape> Shapes = [];
+        public List<IShape> Shapes = new List<IShape>();
         public List<IShape> _shapes = new List<IShape>();
+        public List<AdornerShape> CtrlPoint { get; set; } = new List<AdornerShape>();
+
+        public double PreviousEditedX { get; set; } = -1;
+        public double PreviousEditedY { get; set; } = -1;
         public MainWindow()
         {
             InitializeComponent();
@@ -38,7 +46,7 @@ namespace PaintProject
                 MessageBox.Show("No shapes found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-           
+
 
             sizeComboBox.ItemsSource = options.Sizes;
             sizeComboBox.SelectedIndex = 0;
@@ -50,7 +58,7 @@ namespace PaintProject
             shapeListView.SelectedIndex = 0;
 
 
-            this.Cursor = Cursors.Cross;
+            Mouse.OverrideCursor = Cursors.Cross;
         }
         IShape currentShape = new MyEllipse();
 
@@ -60,37 +68,443 @@ namespace PaintProject
             {
                 return;
             }
-            isDrawing = true;
-            startPoint = e.GetPosition(drawingArea);
-            currentShape.SetStart(startPoint);
+            if (Mouse.OverrideCursor == Cursors.Cross)
+            {
+                isDrawing = true;
+                startPoint = e.GetPosition(drawingArea);
+            }
+
+            Point currentPos = e.GetPosition(drawingArea);
+
+
+            if (_shapes.Count > 0)
+            {
+                if (CtrlPoint.Count > 0 && SelectedCtrlPointType == String.Empty && SelectedCtrlPointEdge == String.Empty)
+                {
+                    for (int i = 0; i < CtrlPoint.Count; i++)
+                    {
+                        if (CtrlPoint[i].IsHovering(chosedShape.RotateAngle, currentPos.X, currentPos.Y))
+                        {
+                            SelectedCtrlPointEdge = CtrlPoint[i].getEdge(chosedShape.RotateAngle);
+                            SelectedCtrlPointType = CtrlPoint[i].Type;
+                        }
+                    }
+                }
+            }
 
         }
+        public string SelectedCtrlPointEdge { get; set; } = string.Empty;
+        public string SelectedCtrlPointType { get; set; } = string.Empty;
         private void drawingHandlerArea_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
+            bool isMouseChange = false;
+
             if (isDrawing && currentShape != null)
             {
                 endPoint = e.GetPosition(drawingArea);
-                currentShape.SetEnd(endPoint);
 
                 // Xóa tất cả các hình đã vẽ trước đó khỏi drawingArea
-                previewDrawingArea.Children.Clear();
-
-
-
-                previewDrawingArea.Children.Add(currentShape.Draw(outlineSelected, colorSelected, sizeSelected));
+                drawingArea.Children.Clear();
+                foreach (var shape in _shapes)
+                {
+                    drawingArea.Children.Add(shape.Draw(shape.Outline, shape.Color, shape.Size,shape.RotateAngleS));
+                }
+                currentShape.SetStart(startPoint);
+                currentShape.SetEnd(endPoint);
+                drawingArea.Children.Add(currentShape.Draw(outlineSelected, colorSelected, sizeSelected,0));
+                chosedShape.RotateAngle = 0;
+                return;
             }
-    
 
+            Point currentPosition = e.GetPosition(drawingArea);
+            for (int i = 0; i < CtrlPoint.Count; i++)
+            {
+                if (CtrlPoint[i].IsHovering(chosedShape.RotateAngle, currentPosition.X, currentPosition.Y) || CtrlPoint[i].IsBeingChosen(this.SelectedCtrlPointType, this.SelectedCtrlPointEdge, chosedShape.RotateAngle))
+                {
+                    switch (CtrlPoint[i].getEdge(chosedShape.RotateAngle))
+                    {
+                        case "topleft":
+                        case "bottomright":
+                            Mouse.OverrideCursor = Cursors.SizeNWSE;
+                            break;
+                        case "topright":
+                        case "bottomleft":
+                            Mouse.OverrideCursor = Cursors.SizeNESW;
+                            break;
+                        case "top":
+                        case "bottom":
+                            Mouse.OverrideCursor = Cursors.SizeNS;
+                            break;
+                        case "left":
+                        case "right":
+                            Mouse.OverrideCursor = Cursors.SizeWE;
+                            break;
+                        default:
+                            Mouse.OverrideCursor = Cursors.Arrow;
+                            break;
+                    }
+
+                    if (CtrlPoint[i].Type == "move" )
+                        Mouse.OverrideCursor = Cursors.SizeAll;
+                    else if(CtrlPoint[i].Type == "rotate")
+                    {
+                        Mouse.OverrideCursor = Cursors.Hand;
+                    }    
+                  
+                    isMouseChange = true;
+                    break;
+                }
+                if (!isMouseChange)
+                {
+                    Mouse.OverrideCursor = Cursors.Cross;
+                }
+
+            }
+            if (Mouse.OverrideCursor == Cursors.SizeNWSE || Mouse.OverrideCursor == Cursors.SizeNESW || Mouse.OverrideCursor == Cursors.SizeNS || Mouse.OverrideCursor == Cursors.SizeWE || Mouse.OverrideCursor == Cursors.SizeAll||Mouse.OverrideCursor ==Cursors.Hand)
+            {
+
+                if (_shapes.Count < 1 || (Mouse.LeftButton != MouseButtonState.Pressed))
+                {
+                    return;
+                }
+
+                Point currentPos = e.GetPosition(drawingArea);
+
+                double dx, dy;
+
+                if (PreviousEditedX == -1 || PreviousEditedY == -1)
+                {
+                    PreviousEditedX = currentPos.X;
+                    PreviousEditedY = currentPos.Y;
+                    return;
+                }
+
+                dx = currentPos.X - PreviousEditedX;
+                dy = currentPos.Y - PreviousEditedY;
+
+
+
+                CtrlPoint.ForEach(ctrlPoint =>
+                {
+                    if (ctrlPoint.IsBeingChosen(this.SelectedCtrlPointType, this.SelectedCtrlPointEdge, chosedShape.RotateAngle))
+                    {
+                        switch (ctrlPoint.Type)
+                        {
+                            case "rotate":
+                                {
+                                    CustomPoint centerPoint = chosedShape.GetCenter();
+
+                                    Vector2 v = new Vector2((float)(currentPos.X - centerPoint.X), (float)(currentPos.Y - centerPoint.Y));
+                                    double angle = (MathF.Atan2(v.Y, v.X) * (180f / Math.PI) + 450f) % 360f;
+
+                                    chosedShape.RotateAngle = angle;
+
+                                    break;
+                                }
+
+                            case "move":
+                                {
+                                    chosedShape.TopLeft.X = chosedShape.TopLeft.X + dx;
+                                    chosedShape.TopLeft.Y = chosedShape.TopLeft.Y + dy;
+                                    chosedShape.BottomRight.X = chosedShape.BottomRight.X + dx;
+                                    chosedShape.BottomRight.Y = chosedShape.BottomRight.Y + dy;
+                                    break;
+                                }
+
+                            case "diag":
+                                {
+                                    var centerPoint = chosedShape.GetCenter();
+
+                                    switch (ctrlPoint.getEdge(chosedShape.RotateAngle))
+                                    {
+                                        case "topleft":
+                                            {
+                                                var vector = new Vector2((float)(currentPos.X - centerPoint.X), (float)(currentPos.Y - centerPoint.Y));
+                                                float a = Util.GetAlphaAngleRadian(chosedShape.RotateAngle);
+                                                float cosa = (float)Math.Cos(a);
+                                                float sina = (float)Math.Sin(a);
+                                                CustomPoint newPoint = new CustomPoint(
+                                                  (vector.X * cosa + vector.Y * sina) + centerPoint.X,
+                                                  (-vector.X * sina + vector.Y * cosa) + centerPoint.Y
+  );
+
+                                                var oldCenterPoint = chosedShape.GetCenter();
+
+                                                // Cập nhật vị trí mới cho LeftTop
+                                                chosedShape.BottomRight.X = newPoint.X;
+                                                chosedShape.BottomRight.Y = newPoint.Y;
+
+                                                var newCenterPoint = chosedShape.GetCenter();
+
+                                                // Tính toán sự thay đổi vị trí của các điểm cực
+                                                (double txx, double tyy) = Util.GetCenterPointTranslation(oldCenterPoint, newCenterPoint, chosedShape);
+
+                                                // Dịch chuyển tất cả các điểm của hình dạng
+                                                chosedShape.TopLeft.X += txx;
+                                                chosedShape.TopLeft.Y += tyy;
+                                                chosedShape.BottomRight.X += txx;
+                                                chosedShape.BottomRight.Y += tyy;
+                                            
+
+
+                                                break;
+                                            }
+                                        case "topright":
+                                            {
+                                                var vector = new Vector2((float)(currentPos.X - centerPoint.X), (float)(currentPos.Y - centerPoint.Y));
+                                                float a = Util.GetAlphaAngleRadian(chosedShape.RotateAngle);
+                                                float cosa = (float)Math.Cos(a);
+                                                float sina = (float)Math.Sin(a);
+                                                CustomPoint newPoint = new CustomPoint((vector.X * cosa + vector.Y * sina) + centerPoint.X, (-vector.X * sina + vector.Y * cosa) + centerPoint.Y);
+
+                                                var oldCenterPoint = chosedShape.GetCenter();
+
+                                               
+                                                chosedShape.TopLeft.X = newPoint.X;
+                                                chosedShape.BottomRight.Y = newPoint.Y;
+
+                                                var newCenterPoint = chosedShape.GetCenter();
+                                                (double txx, double tyy) = Util.GetCenterPointTranslation(oldCenterPoint, newCenterPoint, chosedShape);
+
+                                                chosedShape.TopLeft.X += txx;
+                                                chosedShape.TopLeft.Y += tyy;
+                                                chosedShape.BottomRight.X += txx;
+                                                chosedShape.BottomRight.Y += tyy;
+
+                                                break;
+                                            }
+                                        case "bottomright":
+                                            {
+                                                var vector = new Vector2((float)(currentPos.X - centerPoint.X), (float)(currentPos.Y - centerPoint.Y));
+                                                float a = Util.GetAlphaAngleRadian(chosedShape.RotateAngle);
+                                                float cosa = (float)Math.Cos(a);
+                                                float sina = (float)Math.Sin(a);
+                                                CustomPoint newPoint = new CustomPoint((vector.X * cosa + vector.Y * sina) + centerPoint.X, (-vector.X * sina + vector.Y * cosa) + centerPoint.Y);
+
+                                                var oldCenterPoint = chosedShape.GetCenter();
+
+                                                chosedShape.BottomRight.X = newPoint.X;
+                                                chosedShape.BottomRight.Y = newPoint.Y;
+
+                                                var newCenterPoint = chosedShape.GetCenter();
+                                                (double txx, double tyy) = Util.GetCenterPointTranslation(oldCenterPoint, newCenterPoint, chosedShape);
+
+                                                chosedShape.TopLeft.X += txx;
+                                                chosedShape.TopLeft.Y += tyy;
+                                                chosedShape.BottomRight.X += txx;
+                                                chosedShape.BottomRight.Y += tyy;
+
+                                                break;
+                                            }
+                                        case "bottomleft":
+                                            {
+                                                var vector = new Vector2((float)(currentPos.X - centerPoint.X), (float)(currentPos.Y - centerPoint.Y));
+                                                float a = Util.GetAlphaAngleRadian(chosedShape.RotateAngle);
+                                                float cosa = (float)Math.Cos(a);
+                                                float sina = (float)Math.Sin(a);
+                                                CustomPoint newPoint = new CustomPoint((vector.X * cosa + vector.Y * sina) + centerPoint.X, (-vector.X * sina + vector.Y * cosa) + centerPoint.Y);
+
+                                                var oldCenterPoint = chosedShape.GetCenter();
+
+                                                chosedShape.BottomRight.X = newPoint.X;
+                                                chosedShape.TopLeft.Y = newPoint.Y;
+                                            
+
+                                                var newCenterPoint = chosedShape.GetCenter();
+                                                (double txx, double tyy) = Util.GetCenterPointTranslation(oldCenterPoint, newCenterPoint, chosedShape);
+
+                                                chosedShape.TopLeft.X += txx;
+                                                chosedShape.TopLeft.Y += tyy;
+                                                chosedShape.BottomRight.X += txx;
+                                                chosedShape.BottomRight.Y += tyy;
+
+                                                break;
+                                            }
+                                        case "right":
+                                            {
+                                                var vector = new Vector2((float)(currentPos.X - centerPoint.X), (float)(currentPos.Y - centerPoint.Y));
+                                                float a = Util.GetAlphaAngleRadian(chosedShape.RotateAngle);
+                                                float cosa = (float)Math.Cos(a);
+                                                float sina = (float)Math.Sin(a);
+                                                CustomPoint newPoint = new CustomPoint((vector.X * cosa + vector.Y * sina) + centerPoint.X, (-vector.X * sina + vector.Y * cosa) + centerPoint.Y);
+
+                                                var oldCenterPoint = chosedShape.GetCenter();
+
+                                                chosedShape.TopLeft.X = newPoint.X;
+
+
+                                                var newCenterPoint = chosedShape.GetCenter();
+                                                (double txx, double tyy) = Util.GetCenterPointTranslation(oldCenterPoint, newCenterPoint, chosedShape);
+
+                                                chosedShape.TopLeft.X += txx;
+                                                chosedShape.TopLeft.Y += tyy;
+                                                chosedShape.BottomRight.X += txx;
+                                                chosedShape.BottomRight.Y += tyy;
+
+                                                break;
+                                            }
+                                        case "left":
+                                            {
+                                                var vector = new Vector2((float)(currentPos.X - centerPoint.X), (float)(currentPos.Y - centerPoint.Y));
+                                                float a = Util.GetAlphaAngleRadian(chosedShape.RotateAngle);
+                                                float cosa = (float)Math.Cos(a);
+                                                float sina = (float)Math.Sin(a);
+                                                CustomPoint newPoint = new CustomPoint((vector.X * cosa + vector.Y * sina) + centerPoint.X, (-vector.X * sina + vector.Y * cosa) + centerPoint.Y);
+
+                                                var oldCenterPoint = chosedShape.GetCenter();
+
+                                                chosedShape.BottomRight.X = newPoint.X;
+
+                                                var newCenterPoint = chosedShape.GetCenter();
+                                                (double txx, double tyy) = Util.GetCenterPointTranslation(oldCenterPoint, newCenterPoint, chosedShape);
+
+                                                chosedShape.TopLeft.X += txx;
+                                                chosedShape.TopLeft.Y += tyy;
+                                                chosedShape.BottomRight.X += txx;
+                                                chosedShape.BottomRight.Y += tyy;
+
+
+                                                break;
+                                            }
+                                        case "top":
+                                            {
+                                                var vector = new Vector2((float)(currentPos.X - centerPoint.X), (float)(currentPos.Y - centerPoint.Y));
+                                                float a = Util.GetAlphaAngleRadian(chosedShape.RotateAngle);
+                                                float cosa = (float)Math.Cos(a);
+                                                float sina = (float)Math.Sin(a);
+                                                CustomPoint newPoint = new CustomPoint((vector.X * cosa + vector.Y * sina) + centerPoint.X, (-vector.X * sina + vector.Y * cosa) + centerPoint.Y);
+
+                                                var oldCenterPoint = chosedShape.GetCenter();
+
+                                                chosedShape.BottomRight.Y = newPoint.Y;
+
+                                                var newCenterPoint = chosedShape.GetCenter();
+                                                (double txx, double tyy) = Util.GetCenterPointTranslation(oldCenterPoint, newCenterPoint, chosedShape);
+
+                                                chosedShape.TopLeft.X += txx;
+                                                chosedShape.TopLeft.Y += tyy;
+                                                chosedShape.BottomRight.X += txx;
+                                                chosedShape.BottomRight.Y += tyy;
+
+                                                break;
+                                            }
+                                        case "bottom":
+                                            {
+                                                var vector = new Vector2((float)(currentPos.X - centerPoint.X), (float)(currentPos.Y - centerPoint.Y));
+                                                float a = Util.GetAlphaAngleRadian(chosedShape.RotateAngle);
+                                                float cosa = (float)Math.Cos(a);
+                                                float sina = (float)Math.Sin(a);
+                                                CustomPoint newPoint = new CustomPoint((vector.X * cosa + vector.Y * sina) + centerPoint.X, (-vector.X * sina + vector.Y * cosa) + centerPoint.Y);
+
+                                                var oldCenterPoint = chosedShape.GetCenter();
+                                                chosedShape.TopLeft.Y = newPoint.Y;
+
+
+                                                var newCenterPoint = chosedShape.GetCenter();
+                                                (double txx, double tyy) = Util.GetCenterPointTranslation(oldCenterPoint, newCenterPoint, chosedShape);
+
+                                                chosedShape.TopLeft.X += txx;
+                                                chosedShape.TopLeft.Y += tyy;
+                                                chosedShape.BottomRight.X += txx;
+                                                chosedShape.BottomRight.Y += tyy;
+
+                                                break;
+                                            }
+                                    }
+                                    break;
+                                }
+                            case "end":
+                                {
+                                    if (ctrlPoint.Point.X == chosedShape.TopLeft.X && ctrlPoint.Point.Y == chosedShape.TopLeft.Y)
+                                    {
+                                        chosedShape.TopLeft.X = currentPos.X;
+                                        chosedShape.TopLeft.Y = currentPos.Y;
+                                    }
+                                    else if (ctrlPoint.Point.X == chosedShape.BottomRight.X && ctrlPoint.Point.Y == chosedShape.BottomRight.Y)
+                                    {
+                                        chosedShape.BottomRight.X = currentPos.X;
+                                        chosedShape.BottomRight.Y = currentPos.Y;
+                                    }
+                                    break;
+                                }
+                        }
+                    }
+
+                });
+                PreviousEditedX = currentPos.X;
+                PreviousEditedY = currentPos.Y;
+                DrawOnCanvas();
+                return;
+            }
         }
 
 
+        ShapePoint chosedShape = new MyEllipse();
         private void drawingHandlerArea_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (isDrawing)
+
+            if (currentShape != null && isDrawing)
             {
                 isDrawing = false;
-                previewDrawingArea.Children.Clear();
-                drawingArea.Children.Add(currentShape.Draw(outlineSelected, colorSelected, sizeSelected));
+                _shapes.Add((IShape)currentShape.Clone());
+            }
+
+            // sau khi vẽ xong
+            chosedShape = (ShapePoint)currentShape;
+
+            // Add the adorner outline to the drawing area for the new shape
+            drawingArea.Children.Add(chosedShape.AdornerOutline());
+
+            List<AdornerShape> ctrlPoints = chosedShape.GetAdornerShapes();
+            this.CtrlPoint = ctrlPoints;
+
+
+            foreach (AdornerShape ctrlPoint in ctrlPoints)
+            {
+                drawingArea.Children.Add(ctrlPoint.DrawPoint(chosedShape.RotateAngle, chosedShape.GetCenter()));
+            }
+
+            if (Mouse.OverrideCursor != Cursors.Cross)
+            {
+
+                this.PreviousEditedX = -1;
+                this.PreviousEditedY = -1;
+
+                this.SelectedCtrlPointEdge = String.Empty;
+                this.SelectedCtrlPointType = String.Empty;
+            }
+        }
+
+        private void DrawOnCanvas()
+        {
+            drawingArea.Children.Clear();
+
+            foreach (var shape in _shapes)
+            {
+               
+                var element = shape.Draw(shape.Outline, shape.Color, shape.Size, shape.RotateAngleS);
+                if (_shapes.Count == 1 || shape == _shapes[_shapes.Count-1])
+                {
+                    element = shape.Draw(outlineSelected,colorSelected,sizeSelected, chosedShape.RotateAngle);
+                }    
+              
+
+                drawingArea.Children.Add(element);
+            }
+
+            if (Mouse.OverrideCursor != Cursors.Cross && _shapes.Count > 0)
+            {
+                drawingArea.Children.Add(chosedShape.AdornerOutline());
+
+                List<AdornerShape> ctrlPoints = chosedShape.GetAdornerShapes();
+                this.CtrlPoint = ctrlPoints;
+
+                ctrlPoints.ForEach(K =>
+                {
+                    drawingArea.Children.Add(K.DrawPoint(chosedShape.RotateAngle, chosedShape.GetCenter()));
+                });
+                
+                
             }
         }
 
@@ -99,7 +513,7 @@ namespace PaintProject
             var selectedShape = (IShape)shapeListView.SelectedItem;
             if (selectedShape is not null)
             {
-                currentShape = selectedShape.Clone();
+                currentShape = (IShape)selectedShape.Clone();
             }
         }
 
@@ -112,6 +526,13 @@ namespace PaintProject
                 outlineSelected = selectedOutline.Value;
             }
 
+            if (_shapes.Count > 0)
+            {
+                var element = _shapes[_shapes.Count - 1].Draw(outlineSelected, colorSelected, sizeSelected, chosedShape.RotateAngle);
+                drawingArea.Children.Add(element);
+            }
+
+
         }
 
         private void sizeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -120,6 +541,11 @@ namespace PaintProject
             if (selectedSize is not null)
             {
                 sizeSelected = selectedSize.Value;
+            }
+            if (_shapes.Count > 0)
+            {
+                var element = _shapes[_shapes.Count - 1].Draw(outlineSelected, colorSelected, sizeSelected, chosedShape.RotateAngle);
+                drawingArea.Children.Add(element);
             }
 
         }
@@ -131,9 +557,52 @@ namespace PaintProject
             {
                 colorSelected = selectedColor;
             }
+            if (_shapes.Count > 0)
+            {
+                var element = _shapes[_shapes.Count - 1].Draw(outlineSelected, colorSelected, sizeSelected, chosedShape.RotateAngle);
+                drawingArea.Children.Add(element);
+            }
 
         }
+        public IShape CopyBuffer { get; set; }
 
-  
+        private void copyButton_Click(object sender, RoutedEventArgs e)
+        {
+            CopyBuffer = (IShape)currentShape.Clone();
+        }
+
+        private void pasteButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShapePoint temp = (ShapePoint)CopyBuffer.Clone();
+            IShape cloned = (IShape)temp;
+            ShapePoint copied = (ShapePoint)cloned.Clone();
+
+            // Định nghĩa vị trí cố định bạn muốn paste hình
+            double fixedX = 400; // Vị trí X cố định
+            double fixedY = 300; // Vị trí Y cố định
+
+            if (copied.IsHovering(fixedX, fixedY))
+            {
+                copied.TopLeft.X += 10;
+                copied.TopLeft.Y += 10;
+                copied.BottomRight.X += 10;
+                copied.BottomRight.Y += 10;
+            }
+            else
+            {
+                var width = copied.BottomRight.X - copied.TopLeft.X;
+                var height = copied.BottomRight.Y - copied.TopLeft.Y;
+
+                copied.TopLeft.X = fixedX;
+                copied.TopLeft.Y = fixedY;
+                copied.BottomRight.X = fixedX + width;
+                copied.BottomRight.Y = fixedY + height;
+            }
+
+            _shapes.Add(cloned);
+            currentShape = cloned;
+            DrawOnCanvas();
+        }
+
     }
 }

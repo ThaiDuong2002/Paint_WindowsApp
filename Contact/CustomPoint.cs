@@ -13,26 +13,30 @@ namespace Contact
         public int Size { get; set; }
         public string Name => "Point";
         public string Icon => "M 0,0 L 0,0";
+        public double RotateAngleS { get; set; } = 0;
         public CustomPoint()
         {
             X = 0;
             Y = 0;
         }
 
-        public IShape Clone()
+        public CustomPoint(double x, double y)
         {
-            CustomPoint point = new CustomPoint();
-            point.X = X;
-            point.Y = Y;
+            X = x;
+            Y = y;
+        }
 
-            return point;
+        public object Clone()
+        {
+       
+            return this.MemberwiseClone();
         }
         public CustomPoint CloneShape()
         {
             return new CustomPoint();
         }
 
-        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size)
+        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size, double R)
         {
             Line line = new Line();
             line.X1 = X;
@@ -56,6 +60,16 @@ namespace Contact
         {
             X = point.X;
             Y = point.Y;
+        }
+
+        public CustomPoint GetStart()
+        {
+            return new CustomPoint();
+        }
+
+        public CustomPoint GetEnd()
+        {
+            return new CustomPoint();
         }
     }
 }
