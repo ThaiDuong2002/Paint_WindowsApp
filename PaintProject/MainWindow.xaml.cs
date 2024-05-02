@@ -9,6 +9,11 @@ using System.Diagnostics;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 using System.Numerics;
 using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
+using System.IO;
+using System.Windows.Controls;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace PaintProject
 {
@@ -59,9 +64,11 @@ namespace PaintProject
 
 
             Mouse.OverrideCursor = Cursors.Cross;
+            KeyDown += RegisterKeyBoardShortCuts;
         }
         IShape currentShape = new MyEllipse();
 
+        public bool isClicked = false;
         private void drawingHandlerArea_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (e.ChangedButton != MouseButton.Left)
@@ -449,13 +456,14 @@ namespace PaintProject
                 _shapes.Add((IShape)currentShape.Clone());
             }
 
+          
             // sau khi vẽ xong
             chosedShape = (ShapePoint)currentShape;
 
-            // Add the adorner outline to the drawing area for the new shape
-            drawingArea.Children.Add(chosedShape.AdornerOutline());
 
-            List<AdornerShape> ctrlPoints = chosedShape.GetAdornerShapes();
+           drawingArea.Children.Add(chosedShape.AdornerOutline());
+
+           List <AdornerShape> ctrlPoints = chosedShape.GetAdornerShapes();
             this.CtrlPoint = ctrlPoints;
 
 
@@ -463,6 +471,9 @@ namespace PaintProject
             {
                 drawingArea.Children.Add(ctrlPoint.DrawPoint(chosedShape.RotateAngle, chosedShape.GetCenter()));
             }
+
+            
+
 
             if (Mouse.OverrideCursor != Cursors.Cross)
             {
@@ -568,41 +579,200 @@ namespace PaintProject
 
         private void copyButton_Click(object sender, RoutedEventArgs e)
         {
-            CopyBuffer = (IShape)currentShape.Clone();
+            _shapes.Add((IShape)currentShape.Clone());
         }
 
         private void pasteButton_Click(object sender, RoutedEventArgs e)
         {
-            ShapePoint temp = (ShapePoint)CopyBuffer.Clone();
-            IShape cloned = (IShape)temp;
-            ShapePoint copied = (ShapePoint)cloned.Clone();
 
-            // Định nghĩa vị trí cố định bạn muốn paste hình
-            double fixedX = 400; // Vị trí X cố định
-            double fixedY = 300; // Vị trí Y cố định
+            ShapePoint copied = (ShapePoint)currentShape;
 
-            if (copied.IsHovering(fixedX, fixedY))
+            copied.TopLeft.X += 10;
+            copied.TopLeft.Y += 10;
+            copied.BottomRight.X += 10;
+            copied.BottomRight.Y += 10;
+
+           
+            DrawOnCanvas();
+        }
+        private void RegisterKeyBoardShortCuts(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl))
             {
-                copied.TopLeft.X += 10;
-                copied.TopLeft.Y += 10;
-                copied.BottomRight.X += 10;
-                copied.BottomRight.Y += 10;
+                // Ctrl + Z == Undo
+                if (Keyboard.IsKeyDown(Key.Z))
+                {
+                    undoButton_Click(sender, e);
+                }
+                // Ctrl + Y == Redo
+                else if (Keyboard.IsKeyDown(Key.Y))
+                {
+                    redoButton_Click(sender, e);
+                }
+
+                // Ctrl + C == Copy
+                else if (Keyboard.IsKeyDown(Key.C))
+                {
+                    copyButton_Click(sender, e);
+                }
+
+                // Ctrl + V == Paste
+                else if (Keyboard.IsKeyDown(Key.V))
+                {
+                    pasteButton_Click(sender, e);
+                }
+
+                // Ctrl + S == Save
+                else if (Keyboard.IsKeyDown(Key.S))
+                {
+                    saveFileButton_Click(sender, e);
+                }
+
+                // Ctrl + O == Open
+                else if (Keyboard.IsKeyDown(Key.O))
+                {
+                    openFileButton_Click(sender, e);
+                }
+
+                // Ctrl + N == New
+                else if (Keyboard.IsKeyDown(Key.N))
+                {
+                    addnewButton_Click(sender, e);
+                }
+
+                // Ctrl + E == Export
+                else if (Keyboard.IsKeyDown(Key.E))
+                {
+                    exportButton_Click(sender, e);
+                }
+
+                // Ctrl + P == Import image
+                else if (Keyboard.IsKeyDown(Key.P))
+                {
+                    importImageButton_Click(sender, e);
+                }
+
+
+            }
+            if (Keyboard.IsKeyDown(Key.Delete))
+            {
+                Delete_Click(sender, e);
+            }
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            //xóa shape cuối cùng
+            if (_shapes.Count > 0)
+            {
+                int lastIndex = _shapes.Count - 1;
+                _shapes.RemoveAt(lastIndex);
+                DrawOnCanvas();
+            }
+        }
+        Stack<IShape> Buffer { get; set; } = new Stack<IShape>();
+
+        private void redoButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Buffer.Count > 0)
+            {
+                _shapes.Add(Buffer.Pop());
+                DrawOnCanvas();
+            }
+        }
+
+        private void undoButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_shapes.Count > 0)
+            {
+                int lastIndex = _shapes.Count - 1;
+                Buffer.Push(_shapes[lastIndex]);
+                _shapes.RemoveAt(lastIndex);
+                DrawOnCanvas();
+            }
+
+        }
+
+        private void importImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg";
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+                ImageBrush imageBrush = new ImageBrush(new BitmapImage(new Uri(filePath)));
+                drawingArea.Background = imageBrush;
+            }
+
+        }
+
+        private void exportButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Tạo một Grid với màu nền trắng
+            Grid grid = new Grid();
+            grid.Background = Brushes.White;
+
+            // Tạo một bản sao của drawingArea và thêm vào Grid
+            Canvas canvasCopy = new Canvas();
+            canvasCopy.Width = drawingArea.ActualWidth;
+            canvasCopy.Height = drawingArea.ActualHeight;
+
+            foreach (var shape in _shapes)
+            {
+                canvasCopy.Children.Add(shape.Draw(shape.Outline, shape.Color, shape.Size, shape.RotateAngleS));
+            }
+
+            grid.Children.Add(canvasCopy);
+
+            // Đảm bảo Grid đã được tải lên trước khi render
+            grid.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            grid.Arrange(new Rect(grid.DesiredSize));
+
+            // Kiểm tra kích thước hợp lệ trước khi tạo RenderTargetBitmap
+            if (grid.ActualWidth > 0 && grid.ActualHeight > 0)
+            {
+                // Sử dụng grid để render
+                RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)grid.ActualWidth, (int)grid.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+                renderTargetBitmap.Render(grid);
+
+                // Tiếp tục với mã lưu hình ảnh như bạn đã làm
+                PngBitmapEncoder pngImage = new PngBitmapEncoder();
+                pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+                var saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+                saveFileDialog.Filter = "Image files (*.png)|*.png";
+
+                if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    using (Stream fileStream = File.Create(saveFileDialog.FileName))
+                    {
+                        pngImage.Save(fileStream);
+                    }
+                }
             }
             else
             {
-                var width = copied.BottomRight.X - copied.TopLeft.X;
-                var height = copied.BottomRight.Y - copied.TopLeft.Y;
-
-                copied.TopLeft.X = fixedX;
-                copied.TopLeft.Y = fixedY;
-                copied.BottomRight.X = fixedX + width;
-                copied.BottomRight.Y = fixedY + height;
+                // Báo lỗi hoặc thông báo rằng không thể tạo hình ảnh do kích thước không hợp lệ
+                MessageBox.Show("Cannot export image. Grid size is invalid.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            _shapes.Add(cloned);
-            currentShape = cloned;
-            DrawOnCanvas();
         }
 
+        private void saveFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+
+
+        }
+
+        private void openFileButton_Click(object sender, RoutedEventArgs e)
+        {
+           
+        }
+
+        private void addnewButton_Click(object sender, RoutedEventArgs e)
+        {
+
+
+        }
     }
 }

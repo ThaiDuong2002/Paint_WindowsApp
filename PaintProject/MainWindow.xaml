@@ -62,6 +62,7 @@
                     <Fluent:Button
                         Name="addnewButton"
                         Header="New"
+                        Click="addnewButton_Click"
                         ToolTip="Ctrl + N">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/add.png" />
@@ -72,6 +73,7 @@
                     <Fluent:Button
                         Name="openFileButton"
                         Header="Open"
+                        Click="openFileButton_Click"
                         ToolTip="Ctrl + O">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/open.png" />
@@ -80,6 +82,7 @@
                     <Fluent:Button
                         Name="saveFileButton"
                         Header="Save"
+                        Click="saveFileButton_Click"
                         ToolTip="Ctrl + S">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/save.png" />
@@ -90,6 +93,7 @@
                     <Fluent:Button
                         Name="exportButton"
                         Header="Export"
+                        Click="exportButton_Click"
                         ToolTip="Ctrl + E">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/export.png" />
@@ -98,6 +102,7 @@
                     <Fluent:Button
                         Name="importImageButton"
                         Header="Photo"
+                        Click="importImageButton_Click"
                         ToolTip="Ctrl + P">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/photo.png" />
@@ -127,6 +132,7 @@
                     <Fluent:Button
                         Name="undoButton"
                         Header="Undo"
+                        Click="undoButton_Click"
                         ToolTip="Ctrl + Z">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/undo.png" />
@@ -135,6 +141,7 @@
                     <Fluent:Button
                         Name="redoButton"
                         Header="Redo"
+                        Click="redoButton_Click"
                         ToolTip="Ctrl + Y">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/redo.png" />
@@ -143,6 +150,7 @@
                     <Fluent:Button
                         Name="Delete"
                         Header="Delete"
+                        Click="Delete_Click"
                         ToolTip="Del">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/trash.png" />
@@ -373,7 +381,7 @@
                 Background="Transparent"
                 MouseDown="drawingHandlerArea_MouseDown"
                 MouseMove="drawingHandlerArea_MouseMove"
-                MouseUp="drawingHandlerArea_MouseUp" 
+                MouseUp="drawingHandlerArea_MouseUp"
                 />
         </Grid>
     </DockPanel>

@@ -138,7 +138,10 @@ namespace Contact
             ShapePoint shape = new ShapePoint();
             shape.BottomRight = BottomRight;
             shape.TopLeft = TopLeft;
+            shape.RotateAngle = RotateAngle;
             return shape;
         }
+
+
     }
 }
