@@ -38,7 +38,7 @@
     public class EndPoint : AdornerShape
     {
         public override string Type => "end";
-        public string Edge { get; set; }
+        public string Edge { get; set; } = "top";
         public override string getEdge(double angle)
         {
             return Edge;

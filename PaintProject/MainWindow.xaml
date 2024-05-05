@@ -118,6 +118,7 @@
                         x:Name="drawButton"
                         Click="changeMode_Click"
                         Header="Draw"
+                        ToolTip="Ctrl + M"
                         Visibility="Collapsed">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/draw.png" />
@@ -126,7 +127,8 @@
                     <Fluent:Button
                         x:Name="selectButton"
                         Click="changeMode_Click"
-                        Header="Select">
+                        Header="Select"
+                        ToolTip="Ctrl + M">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/select.png" />
                         </Fluent:Button.LargeIcon>
@@ -386,13 +388,18 @@
                 x:Name="drawingHandler"
                 Background="Transparent"
                 IsHitTestVisible="True"
-                />
-            <Canvas x:Name="drawingArea" />
-            <Canvas
-                Background="Transparent"
                 MouseDown="drawingHandlerArea_MouseDown"
+                MouseLeave="drawingHandlerArea_MouseLeave"
                 MouseMove="drawingHandlerArea_MouseMove"
                 MouseUp="drawingHandlerArea_MouseUp" />
+            <Canvas x:Name="drawingArea"
+                    IsHitTestVisible="False"
+                    ClipToBounds="True"
+                    Background="White"/>
+            <Canvas x:Name="previewArea"
+                    IsHitTestVisible="False"
+                    ClipToBounds="True"
+                    Background="Transparent" />
         </Grid>
     </DockPanel>
 </Fluent:RibbonWindow>

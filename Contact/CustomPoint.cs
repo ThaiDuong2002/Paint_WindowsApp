@@ -8,7 +8,7 @@ namespace Contact
     {
         public double X { get; set; }
         public double Y { get; set; }
-        public DoubleCollection? Outline { get; set; } = new DoubleCollection();
+        public DoubleCollection Outline { get; set; } = new DoubleCollection();
         public SolidColorBrush Color { get; set; } = Brushes.Black;
         public int Size { get; set; }
         public string Name => "Point";
@@ -26,17 +26,21 @@ namespace Contact
             Y = y;
         }
 
-        public object Clone()
+        public IShape Clone()
         {
 
-            return this.MemberwiseClone();
+            return new CustomPoint();
         }
         public CustomPoint CloneShape()
         {
-            return new CustomPoint();
+            return new CustomPoint()
+            {
+                X = this.X,
+                Y = this.Y,
+            };
         }
 
-        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size, double R)
+        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size)
         {
             Line line = new Line();
             line.X1 = X;

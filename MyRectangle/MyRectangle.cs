@@ -10,15 +10,13 @@ namespace RectangleShape
     {
         public string Name => "Rectangle";
         public string Icon => "Images/Shapes/rectangle.png";
-        public double RotateAngleS { get; set; } = 0;
 
-
-        public object Clone()
+        public IShape Clone()
         {
-            return this.MemberwiseClone();
+            return new MyRectangle();
         }
 
-        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size, double RotateAngle)
+        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size)
         {
             var left = Math.Min(BottomRight.X, TopLeft.X);
             var top = Math.Min(BottomRight.Y, TopLeft.Y);
@@ -42,9 +40,8 @@ namespace RectangleShape
 
             Canvas.SetLeft(rectangle, left);
             Canvas.SetTop(rectangle, top);
-            this.RotateAngleS = RotateAngle;
 
-            RotateTransform transform = new(RotateAngleS)
+            RotateTransform transform = new(RotateAngle)
             {
                 CenterX = width * 1.0 / 2,
                 CenterY = height * 1.0 / 2
@@ -57,7 +54,7 @@ namespace RectangleShape
 
         public void SetEnd(Point point)
         {
-            TopLeft = new CustomPoint()
+            BottomRight = new CustomPoint()
             {
                 X = point.X,
                 Y = point.Y
@@ -66,7 +63,7 @@ namespace RectangleShape
 
         public void SetStart(Point point)
         {
-            BottomRight = new CustomPoint()
+            TopLeft = new CustomPoint()
             {
                 X = point.X,
                 Y = point.Y
@@ -78,6 +75,8 @@ namespace RectangleShape
             temp.BottomRight = BottomRight;
             temp.TopLeft = TopLeft;
             temp.Size = Size;
+            temp.RotateAngle = RotateAngle;
+
             if (Outline != null)
             {
                 temp.Outline = this.Outline.Clone();
@@ -91,12 +90,12 @@ namespace RectangleShape
 
         public CustomPoint GetStart()
         {
-            return BottomRight;
+            return TopLeft;
         }
 
         public CustomPoint GetEnd()
         {
-            return TopLeft;
+            return BottomRight;
         }
 
 

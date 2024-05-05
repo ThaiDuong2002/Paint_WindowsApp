@@ -26,7 +26,7 @@ namespace PaintProject
                 {
                     if (type.IsClass && typeof(IShape).IsAssignableFrom(type) && type != typeof(CustomPoint))
                     {
-                        IShape shape = (IShape)Activator.CreateInstance(type);
+                        IShape shape = (IShape)Activator.CreateInstance(type)!;
                         if (shape != null)
                         {
                             _shapes.Add(shape.Name, shape);
@@ -44,6 +44,15 @@ namespace PaintProject
         {
             List<string> names = [.. _shapes.Keys];
             return names;
+        }
+        public IShape CreateShape(string name)
+        {
+            if (_shapes.TryGetValue(name, out IShape? value))
+            {
+                IShape shape = value.Clone();
+                return shape;
+            }
+            throw new Exception("Shape not found");
         }
     }
 }

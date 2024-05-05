@@ -22,5 +22,6 @@ namespace PaintProject
             }
         }
         public IEnumerable<IShape> Shapes => _shapeFactory.GetShapes();
+        public IShape CreateShape(string name) => _shapeFactory.CreateShape(name);
     }
 }

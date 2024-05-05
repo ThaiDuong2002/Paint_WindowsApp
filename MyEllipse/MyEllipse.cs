@@ -1,8 +1,6 @@
 using Contact;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Shapes;
 namespace EllipseShape
@@ -11,14 +9,35 @@ namespace EllipseShape
     {
         public string Name => "Ellipse";
         public string Icon => "Images/Shapes/ellipse.png";
-        public double RotateAngleS { get; set; } = 0;
 
-        public object Clone()
+        public IShape Clone()
         {
-            return this.MemberwiseClone();
+            return new MyEllipse();
         }
 
-        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size, double RotateAngle)
+        public override ShapePoint CloneShape()
+        {
+            MyEllipse ellipse = new MyEllipse()
+            {
+                TopLeft = TopLeft.CloneShape(),
+                BottomRight = BottomRight.CloneShape(),
+                RotateAngle = RotateAngle,
+                Size = Size,
+            };
+
+            if (Outline != null)
+            {
+                ellipse.Outline = Outline.Clone();
+            }
+
+            if (Color != null)
+            {
+                ellipse.Color = Color.Clone();
+            }
+            return ellipse;
+        }
+
+        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size)
         {
             var left = Math.Min(BottomRight.X, TopLeft.X);
             var top = Math.Min(BottomRight.Y, TopLeft.Y);
@@ -42,10 +61,9 @@ namespace EllipseShape
 
             Canvas.SetLeft(ellipse, left);
             Canvas.SetTop(ellipse, top);
-            this.RotateAngleS = RotateAngle;
 
 
-            RotateTransform transform = new(this.RotateAngleS)
+            RotateTransform transform = new(RotateAngle)
             {
                 CenterX = width * 1.0 / 2,
                 CenterY = height * 1.0 / 2
@@ -58,7 +76,7 @@ namespace EllipseShape
 
         public void SetEnd(Point point)
         {
-            TopLeft = new CustomPoint()
+            BottomRight = new CustomPoint()
             {
                 X = point.X,
                 Y = point.Y
@@ -67,21 +85,17 @@ namespace EllipseShape
 
         public void SetStart(Point point)
         {
-            BottomRight = new CustomPoint()
-            {
-                X = point.X,
-                Y = point.Y
-            };
+            TopLeft.SetStart(point);
         }
 
         public CustomPoint GetStart()
         {
-            return BottomRight;
+            return TopLeft;
         }
 
         public CustomPoint GetEnd()
         {
-            return TopLeft;
+            return BottomRight;
         }
     }
 }

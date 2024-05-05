@@ -10,15 +10,14 @@ namespace LineShape
     {
         public string Name => "Line";
         public string Icon => "Images/Shapes/line.png";
-        public double RotateAngleS { get; set; }
 
 
-        public object Clone()
+        public IShape Clone()
         {
-            return this.MemberwiseClone();
+            return new MyLine();
         }
 
-        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size,double R)
+        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size)
         {
             this.Outline = outline;
             this.Color = color;
@@ -60,6 +59,7 @@ namespace LineShape
             line.BottomRight = BottomRight;
             line.TopLeft = TopLeft;
             line.Size = Size;
+            line.RotateAngle = RotateAngle;
 
             if (Outline != null)
             {
@@ -140,12 +140,12 @@ namespace LineShape
 
         public CustomPoint GetStart()
         {
-            return BottomRight;
+            return TopLeft;
         }
 
         public CustomPoint GetEnd()
         {
-            return TopLeft;
+            return BottomRight;
         }
     }
 
