@@ -28,7 +28,7 @@ namespace Contact
 
         public object Clone()
         {
-       
+
             return this.MemberwiseClone();
         }
         public CustomPoint CloneShape()

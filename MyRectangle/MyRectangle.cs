@@ -1,9 +1,7 @@
 
 using Contact;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Shapes;
 namespace RectangleShape
@@ -20,7 +18,7 @@ namespace RectangleShape
             return this.MemberwiseClone();
         }
 
-        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size,double RotateAngle)
+        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size, double RotateAngle)
         {
             var left = Math.Min(BottomRight.X, TopLeft.X);
             var top = Math.Min(BottomRight.Y, TopLeft.Y);
@@ -80,11 +78,11 @@ namespace RectangleShape
             temp.BottomRight = BottomRight;
             temp.TopLeft = TopLeft;
             temp.Size = Size;
-            if(Outline != null)
+            if (Outline != null)
             {
                 temp.Outline = this.Outline.Clone();
             }
-            if(Color != null)
+            if (Color != null)
             {
                 temp.Color = this.Color.Clone();
             }
@@ -101,7 +99,7 @@ namespace RectangleShape
             return TopLeft;
         }
 
-      
+
     }
 
 }

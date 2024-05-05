@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows;
 
 namespace Contact
 {
@@ -23,7 +18,7 @@ namespace Contact
         {
         }
 
-        virtual public UIElement DrawPoint(double angle,CustomPoint centrePoint)
+        virtual public UIElement DrawPoint(double angle, CustomPoint centrePoint)
         {
             UIElement element = new Rectangle()
             {

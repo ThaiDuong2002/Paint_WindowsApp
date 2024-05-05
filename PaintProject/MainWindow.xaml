@@ -60,9 +60,9 @@
                 Tag="/Images/Icons/folder.png">
                 <Fluent:RibbonGroupBox Header="New">
                     <Fluent:Button
-                        Name="addnewButton"
+                        Name="addNewButton"
+                        Click="addNewButton_Click"
                         Header="New"
-                        Click="addnewButton_Click"
                         ToolTip="Ctrl + N">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/add.png" />
@@ -72,8 +72,8 @@
                 <Fluent:RibbonGroupBox Header="Files">
                     <Fluent:Button
                         Name="openFileButton"
-                        Header="Open"
                         Click="openFileButton_Click"
+                        Header="Open"
                         ToolTip="Ctrl + O">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/open.png" />
@@ -81,8 +81,8 @@
                     </Fluent:Button>
                     <Fluent:Button
                         Name="saveFileButton"
-                        Header="Save"
                         Click="saveFileButton_Click"
+                        Header="Save"
                         ToolTip="Ctrl + S">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/save.png" />
@@ -91,9 +91,9 @@
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="Images">
                     <Fluent:Button
-                        Name="exportButton"
+                        Name="exportImageButton"
+                        Click="exportImageButton_Click"
                         Header="Export"
-                        Click="exportButton_Click"
                         ToolTip="Ctrl + E">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/export.png" />
@@ -101,8 +101,8 @@
                     </Fluent:Button>
                     <Fluent:Button
                         Name="importImageButton"
-                        Header="Photo"
                         Click="importImageButton_Click"
+                        Header="Photo"
                         ToolTip="Ctrl + P">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/photo.png" />
@@ -116,6 +116,7 @@
                 <Fluent:RibbonGroupBox Header="Tools">
                     <Fluent:Button
                         x:Name="drawButton"
+                        Click="changeMode_Click"
                         Header="Draw"
                         Visibility="Collapsed">
                         <Fluent:Button.LargeIcon>
@@ -124,6 +125,7 @@
                     </Fluent:Button>
                     <Fluent:Button
                         x:Name="selectButton"
+                        Click="changeMode_Click"
                         Header="Select">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/select.png" />
@@ -131,8 +133,8 @@
                     </Fluent:Button>
                     <Fluent:Button
                         Name="undoButton"
-                        Header="Undo"
                         Click="undoButton_Click"
+                        Header="Undo"
                         ToolTip="Ctrl + Z">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/undo.png" />
@@ -140,17 +142,17 @@
                     </Fluent:Button>
                     <Fluent:Button
                         Name="redoButton"
-                        Header="Redo"
                         Click="redoButton_Click"
+                        Header="Redo"
                         ToolTip="Ctrl + Y">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/redo.png" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
                     <Fluent:Button
-                        Name="Delete"
+                        Name="deleteButton"
+                        Click="deleteButton_Click"
                         Header="Delete"
-                        Click="Delete_Click"
                         ToolTip="Del">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/trash.png" />
@@ -169,6 +171,7 @@
                     </Fluent:Button>
                     <Fluent:Button
                         x:Name="cutButton"
+                        Click="cutButton_Click"
                         Header="Cut"
                         ToolTip="Ctrl + X">
                         <Fluent:Button.LargeIcon>
@@ -177,15 +180,16 @@
                     </Fluent:Button>
                     <Fluent:Button
                         x:Name="pasteButton"
-                        Header="Paste"
                         Click="pasteButton_Click"
+                        Header="Paste"
                         ToolTip="Ctrl + V">
                         <Fluent:Button.LargeIcon>
                             <Image Source="Images/Icons/paste.png" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
                     <Fluent:Button
-                        x:Name="DuplicateButton"
+                        x:Name="duplicateButton"
+                        Click="duplicateButton_Click"
                         Header="Duplicate"
                         ToolTip="Ctrl + D">
                         <Fluent:Button.LargeIcon>
@@ -198,8 +202,8 @@
                         x:Name="shapeListView"
                         Width="160"
                         BorderThickness="0"
-                        SelectionChanged="ShapeListView_SelectionChanged"
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        SelectionChanged="shapeListView_SelectionChanged">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Border
@@ -237,24 +241,27 @@
                             Text="Size" />
                         <Fluent:ComboBox
                             x:Name="sizeComboBox"
-                            SelectionChanged="sizeComboBox_SelectionChanged"
                             Height="20"
                             Margin="0,8,0,8"
                             HorizontalAlignment="Center"
                             IsEditable="False"
-                            SelectedIndex="0">
+                            SelectedIndex="0"
+                            SelectionChanged="sizeComboBox_SelectionChanged">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate DataType="{x:Type local:SizeOption}">
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Label}" />
-                                        <Line
-                                            Margin="5 5 0 0"
-                                            X1="0"
-                                            X2="100"
-                                            Stroke="Black"
+                                    <StackPanel
+                                        HorizontalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <TextBlock
                                             VerticalAlignment="Center"
+                                            Text="{Binding Label}" />
+                                        <Line
+                                            Margin="5,5,0,0"
+                                            VerticalAlignment="Center"
+                                            Stroke="Black"
                                             StrokeThickness="{Binding Value}"
-                                             />
+                                            X1="0"
+                                            X2="100" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
@@ -269,13 +276,13 @@
                             Text="Outline" />
                         <Fluent:ComboBox
                             x:Name="outlineComboBox"
-                            SelectionChanged="outlineComboBox_SelectionChanged"
                             Width="130"
                             Height="20"
                             Margin="0,8,0,8"
                             HorizontalAlignment="Center"
                             IsEditable="False"
-                            SelectedIndex="0">
+                            SelectedIndex="0"
+                            SelectionChanged="outlineComboBox_SelectionChanged">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate DataType="{x:Type local:OutlineOption}">
                                     <StackPanel Orientation="Horizontal">
@@ -299,12 +306,12 @@
                     <StackPanel Orientation="Horizontal">
                         <ListView
                             x:Name="solidColorsListView"
-                            SelectionChanged="solidColorsListView_SelectionChanged"
                             Width="200"
                             Margin="0,4,0,0"
                             BorderThickness="0"
                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                            SelectedIndex="0">
+                            SelectedIndex="0"
+                            SelectionChanged="solidColorsListView_SelectionChanged">
                             <ListView.Resources>
                                 <DataTemplate DataType="{x:Type SolidColorBrush}">
                                     <Border
@@ -328,6 +335,7 @@
                             Name="editColorButton"
                             Margin="0,6,0,0"
                             Padding="4,4,4,0"
+                            Click="editColorButton_Click"
                             Header="Custom">
                             <Fluent:Button.LargeIcon>
                                 <Image Source="Images/Icons/colour.png" />
@@ -374,15 +382,17 @@
             Margin="4"
             d:Height="540"
             d:Width="960">
-            <Canvas
-                x:Name="drawingArea"
-              />
+            <Border
+                x:Name="drawingHandler"
+                Background="Transparent"
+                IsHitTestVisible="True"
+                />
+            <Canvas x:Name="drawingArea" />
             <Canvas
                 Background="Transparent"
                 MouseDown="drawingHandlerArea_MouseDown"
                 MouseMove="drawingHandlerArea_MouseMove"
-                MouseUp="drawingHandlerArea_MouseUp"
-                />
+                MouseUp="drawingHandlerArea_MouseUp" />
         </Grid>
     </DockPanel>
 </Fluent:RibbonWindow>

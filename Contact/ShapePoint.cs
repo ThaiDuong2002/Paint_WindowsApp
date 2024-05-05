@@ -1,5 +1,5 @@
-﻿using System.Windows.Controls;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 namespace Contact
@@ -11,7 +11,7 @@ namespace Contact
         public int Size { get; set; } = 1;
         public CustomPoint BottomRight { get; set; } = new CustomPoint();
         public CustomPoint TopLeft { get; set; } = new CustomPoint();
-        public double RotateAngle { get; set; }=0;
+        public double RotateAngle { get; set; } = 0;
         public virtual CustomPoint GetCenter()
         {
             CustomPoint center = new CustomPoint();

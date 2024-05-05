@@ -12,7 +12,7 @@ namespace Contact
         public string Name { get; }
         public string Icon { get; }
         public double RotateAngleS { get; set; }
-        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size,double RoteAngle);
+        public UIElement Draw(DoubleCollection outline, SolidColorBrush color, int size, double RoteAngle);
         public object Clone();
         public void SetStart(Point point);
         public void SetEnd(Point point);
